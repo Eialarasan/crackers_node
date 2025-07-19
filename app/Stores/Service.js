@@ -21,7 +21,6 @@ class StoreService {
                     email: email,
                     password: encryptPass(password),
                     adminId:adminId,
-                    
                     address:address,
                     isActive:1,
                     createdDate:new Date(),
@@ -138,14 +137,14 @@ class StoreService {
                 where: (data.search&&data.id)? {
                     isActive: 1,
                    id:data.id,
-                   userName:{ [Op.like]: `%${data.search}%`}
+                   name:{ [Op.like]: `%${data.search}%`}
                 }:data.id? {
                     isActive: 1,
                     id:data.id,
                 }:data.search?{
                     isActive: 1,
                     
-                    userName:{ [Op.like]: `%${data.search}%`}
+                    name:{ [Op.like]: `%${data.search}%`}
                 }:{
                     isActive:1
                 },

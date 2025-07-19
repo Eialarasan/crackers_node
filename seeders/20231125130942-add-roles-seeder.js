@@ -1,23 +1,19 @@
-'use strict';
+"use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-   await queryInterface.bulkInsert('Roles', [{
-      role_name: 'admin',
-    },{
-      role_name: 'user',
-    }], {});
-   
-  ;
+  async up(queryInterface, Sequelize) {
+    await queryInterface.bulkInsert("SuperAdmin", [
+      {
+        name: "Super Admin",
+        email: "superadmin@example.com",
+        password: "12345",
+      },
+    ]);
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-  }
+  async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("SuperAdmin", {
+      email: "superadmin@example.com",
+    });
+  },
 };

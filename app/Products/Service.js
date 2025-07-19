@@ -7,12 +7,17 @@ import { Op } from 'sequelize'
 class ProductService {
     async ProductAdd(data, res) {
         try {
-            const { name, price, storeId } = data
+            const { name, price, storeId, productImage } = data
             const RegisterUser = await Entity.Product.findOne({
                 where: {
                     name: name
                 }
             })
+            let imageBuffer = null;
+            if (productImage) {
+                const base64Data = productImage.replace(/^data:image\/\w+;base64,/, '');
+                imageBuffer = Buffer.from(base64Data, 'base64');
+            }
             if (RegisterUser) {
                 return res.send({ status: "failed", message: "product is already entered", response_code: 1 })
             } else {
@@ -22,8 +27,9 @@ class ProductService {
                     storeId: storeId,
                     isActive: 1,
                     createdDate: new Date(),
+                    productImage:imageBuffer,
                 }
-                await Entity.Store.create(Object.assign({}, payload))
+                await Entity.Product.create(Object.assign({}, payload))
                 return res.send({ status: "success", message: "Product created successfully", response_code: 0 })
             }
         } catch (error) {
@@ -34,23 +40,27 @@ class ProductService {
 
     async UpdateProduct(data, res) {
         try {
-            const { id, name, price, storeId } = data
+            const { id, name, price, storeId ,productImage} = data
             const findId = await Entity.Product.findOne({
                 where: {
                     id: id
                 }
             })
+             let imageBuffer = null;
+            if (productImage) {
+                const base64Data = productImage.replace(/^data:image\/\w+;base64,/, '');
+                imageBuffer = Buffer.from(base64Data, 'base64');
+            }
             if (!findId) {
                 res.send({ status: 'failed', message: "product not found", response_code: 1 })
             } else {
                 const payload = {
                     name: name,
-                   
                     storeId: storeId,
-
                     price: price,
                     isActive: 1,
                     createdDate: new Date(),
+                    productImage:imageBuffer,
                 }
                 const updateOrganization = await findId.update(Object.assign({}, payload))
                 return res.send({ status: "success", message: "product updated successfully", response_code: 0 })

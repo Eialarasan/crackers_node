@@ -29,10 +29,14 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-         isActive: {
+        isActive: {
             field: 'is_active',
             type: DataTypes.BOOLEAN,
             defaultValue: true
+        }, productImage: {
+            field: 'productImage',
+            type: DataTypes.BLOB('long'), // 'long' for large images
+            allowNull: true
         },
         createdAt: {
             field: 'created_at',
@@ -56,7 +60,7 @@ module.exports = function (sequelize, DataTypes) {
         // Each Product belongs to one Store
         Product.belongsTo(models.Store, {
             foreignKey: 'storeId',
-          
+
         });
     };
 

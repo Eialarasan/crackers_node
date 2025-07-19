@@ -36,7 +36,7 @@ class AdminService {
 
     async Updateadmin(data, res) {
         try {
-            const { id, name, email, password, superAdminId, isActive } = data
+            const { id, name, email, password, superAdminId, isActive,active } = data
             const findId = await Entity.Admin.findOne({
                 where: {
                     id: id
@@ -52,6 +52,7 @@ class AdminService {
                     superAdminId: superAdminId,
                     isActive: isActive,
                     updatedAt: new Date(),
+                   
                 }
                 const updateOrganization = await findId.update(Object.assign({}, payload))
                 return res.send({ status: "success", message: "admin updated successfully", response_code: 0 })
