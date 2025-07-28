@@ -25,7 +25,7 @@ class SuperadminService {
                     user.userId=findUser.id
                     let access_token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: "1h" })
                     const loginDetails={
-                       id:findUser&&findUser.id, name:findUser&&findUser.name,email:findUser.email
+                       id:findUser&&findUser.id, name:findUser&&findUser.name,email:findUser.email,role:findUser&&findUser.role
                     }
                     res.send({ status: "success", response_message: "You have login succesfully",loginDetails:loginDetails, access_token: access_token, response_code: 0 })
             } catch (error) {

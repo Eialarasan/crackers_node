@@ -7,6 +7,7 @@ module.exports = {
         name: "Super Admin",
         email: "superadmin@example.com",
         password: "12345",
+        role:'superadmin'
       },
     ]);
   },

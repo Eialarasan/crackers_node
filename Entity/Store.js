@@ -30,6 +30,11 @@ module.exports = function (sequelize, DataTypes) {
             field: 'password',
             type: DataTypes.STRING(255)
         },
+         role: {
+            field: 'role',
+            type: DataTypes.STRING(255),
+            allowNull: true
+        },
         isActive: {
             field: 'is_active',
             type: DataTypes.BOOLEAN,

@@ -16,8 +16,6 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true
         }
 
-      
-
     }, {
         tableName: 'Roles',
         timestamps: false,

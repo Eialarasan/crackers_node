@@ -29,6 +29,11 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: true
         },
+         role: {
+            field: 'role',
+            type: DataTypes.STRING(255),
+            allowNull: true
+        },
         isActive: {
             field: 'is_active',
             type: DataTypes.INTEGER,

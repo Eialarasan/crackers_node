@@ -52,7 +52,7 @@ class AdminService {
                     superAdminId: superAdminId,
                     isActive: isActive,
                     updatedAt: new Date(),
-                   
+                   role:'admin'
                 }
                 const updateOrganization = await findId.update(Object.assign({}, payload))
                 return res.send({ status: "success", message: "admin updated successfully", response_code: 0 })
@@ -85,7 +85,7 @@ class AdminService {
             }
             user.userId = findUser.id
             let access_token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: "1h" })
-            res.send({ status: "success", response_message: "You have login succesfully", adminDetails: findUser, access_token: access_token, response_code: 0 })
+            res.send({ status: "success", response_message: "You have login succesfully", loginDetails: findUser, access_token: access_token, response_code: 0 })
         } catch (error) {
             console.error("ADMIN_LOGIN", error)
             return res.status(500).send({ response_code: 2, response_message: "Sorry something went wrong" });

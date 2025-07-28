@@ -23,6 +23,7 @@ class StoreService {
                     adminId:adminId,
                     address:address,
                     isActive:1,
+                    role:"store",
                     createdDate:new Date(),
                 }
                  await Entity.Store.create(Object.assign({}, payload))
@@ -50,7 +51,7 @@ class StoreService {
                     email: email,
                     password: encryptPass(password),
                     adminId:adminId,
-                   
+                    role:"store",
                     address:address,
                     isActive:1,
                     createdDate:new Date(),
@@ -73,7 +74,7 @@ class StoreService {
             const findUser = await Entity.Store.findOne({
                 where: {
                     email: email,
-                    isActive:1,
+                  
                 }
             })
             if (!findUser || findUser.password != encryptPass(password)){
@@ -81,7 +82,7 @@ class StoreService {
              }
                 user.userId=findUser.id
                 let access_token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: "1h" })
-                res.send({ status: "success", response_message: "You have login succesfully",storeDetails:findUser, access_token: access_token, response_code: 0 })
+                res.send({ status: "success", response_message: "You have login succesfully",loginDetails:findUser, access_token: access_token, response_code: 0 })
         } catch (error) {
             console.error("STORE_LOGIN",error)
             return res.status(500).send({ response_code: 2, response_message: "Sorry something went wrong" });
