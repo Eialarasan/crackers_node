@@ -24,7 +24,12 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: false
         },
-        storeId: {
+        categoryId: {
+            field: 'category_id',
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+         storeId: {
             field: 'store_id',
             type: DataTypes.INTEGER,
             allowNull: false
@@ -58,8 +63,8 @@ module.exports = function (sequelize, DataTypes) {
 
     Product.associate = function (models) {
         // Each Product belongs to one Store
-        Product.belongsTo(models.Store, {
-            foreignKey: 'storeId',
+        Product.belongsTo(models.Category, {
+            foreignKey: 'categoryId',
 
         });
     };

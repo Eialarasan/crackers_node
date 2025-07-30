@@ -12,7 +12,7 @@ var db = {
 };
 // db.sequelize.sync({force:true})
 // db.User = require('./User')(db.sequelize, Sequelize.DataTypes)
-// db.Roles = require('./Roles')(db.sequelize, Sequelize.DataTypes)
+db.Category = require('./Category')(db.sequelize, Sequelize.DataTypes)
 db.SuperAdmin = require('./SuperAdmin')(db.sequelize, Sequelize.DataTypes)
 db.Admin = require('./Admin')(db.sequelize, Sequelize.DataTypes)
 db.Store = require('./Store')(db.sequelize, Sequelize.DataTypes)

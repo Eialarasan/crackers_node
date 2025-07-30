@@ -62,7 +62,7 @@ module.exports = function (sequelize, DataTypes) {
             as: 'admin'
         });
 
-        Store.hasMany(models.Product, {
+        Store.hasMany(models.Category, {
             foreignKey: 'storeId'
         });
     };

@@ -7,7 +7,7 @@ import { Op } from 'sequelize'
 class ProductService {
     async ProductAdd(data, res) {
         try {
-            const { name, price, storeId, productImage } = data
+            const { name, price, storeId, productImage, categoryId } = data
             const RegisterUser = await Entity.Product.findOne({
                 where: {
                     name: name
@@ -26,8 +26,9 @@ class ProductService {
                     price: price,
                     storeId: storeId,
                     isActive: 1,
+                    categoryId: categoryId,
                     createdDate: new Date(),
-                    productImage:imageBuffer,
+                    productImage: imageBuffer,
                 }
                 await Entity.Product.create(Object.assign({}, payload))
                 return res.send({ status: "success", message: "Product created successfully", response_code: 0 })
@@ -40,13 +41,24 @@ class ProductService {
 
     async UpdateProduct(data, res) {
         try {
-            const { id, name, price, storeId ,productImage} = data
+            const { id, name, price, storeId, productImage } = data
             const findId = await Entity.Product.findOne({
                 where: {
                     id: id
                 }
             })
-             let imageBuffer = null;
+            let imageBuffer;
+            if (typeof productImage === 'string') {
+                const base64 = productImage.startsWith('data:')
+                    ? productImage.split(',', 2)[1] // strip data URL prefix
+                    : productImage;
+                imageBuffer = Buffer.from(base64, 'base64');
+            } else if (Buffer.isBuffer(productImage)) {
+                imageBuffer = productImage;
+            } else if (productImage && productImage.buffer && Buffer.isBuffer(productImage.buffer)) {
+                // e.g. multer file object
+                imageBuffer = productImage.buffer;
+            }
             if (productImage) {
                 const base64Data = productImage.replace(/^data:image\/\w+;base64,/, '');
                 imageBuffer = Buffer.from(base64Data, 'base64');
@@ -60,7 +72,7 @@ class ProductService {
                     price: price,
                     isActive: 1,
                     createdDate: new Date(),
-                    productImage:imageBuffer,
+                    productImage: imageBuffer,
                 }
                 const updateOrganization = await findId.update(Object.assign({}, payload))
                 return res.send({ status: "success", message: "product updated successfully", response_code: 0 })
@@ -154,7 +166,12 @@ class ProductService {
                     userName: { [Op.like]: `%${data.search}%` }
                 } : {
                     isActive: 1
-                },
+                }, include: [
+                    {
+                        model: Entity.Category
+                    },
+
+                ]
 
             })
             return res.send({ status: 'success', message: 'success', response: productList, response_code: 0 })

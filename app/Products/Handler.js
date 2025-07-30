@@ -5,12 +5,14 @@ class ProductFilter {
     async ProductAdd(req, res) {
         try {
             const data = req.body
-            const { name,price,storeId} = data
+            const { name,price,storeId,categoryId} = data
             if (!name) {
                 return res.send({ response_code: 2, response_message: "product is missing", response_code: 1 });
             }
              else if (!price) {
                 return res.send({ response_code: 2, response_message: "price is missing", response_code: 1 });
+            }else if (!categoryId) {
+                return res.send({ response_code: 2, response_message: "category is missing", response_code: 1 });
             }else if (!storeId) {
                 return res.send({ response_code: 2, response_message: "store is missing", response_code: 1 });
             } else {
