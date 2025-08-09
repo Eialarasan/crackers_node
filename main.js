@@ -8,7 +8,8 @@ import {
   adminRouter,
   productRouter,
   superadminRouter,
-  categoryRouter
+  categoryRouter,
+  orderRouter
 } from './app';
 
 const app = express();
@@ -26,6 +27,7 @@ app.use('/api/store', storeRouter);
 app.use('/api/product', productRouter);
 app.use('/api/superadmin', superadminRouter);
 app.use('/api/category', categoryRouter);
+app.use('/api/order', orderRouter);
 
 // Optional: friendlier 413 response
 app.use((err, req, res, next) => {

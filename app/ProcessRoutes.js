@@ -4,8 +4,10 @@ import { MediaType } from "../config";
 
 
 export default (router, routes) => {
+    console.log('Processing routes:', routes.map(r => ({ path: r.path, type: r.type })));
 
     return routes.map(route => {
+        console.log(`Registering route: ${route.type} ${route.path}`);
         const middleWare = route.middleware || [];
         switch (route.type) {
             case MediaType.GET:
