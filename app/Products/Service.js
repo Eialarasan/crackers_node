@@ -7,7 +7,7 @@ import { Op } from 'sequelize'
 class ProductService {
     async ProductAdd(data, res) {
         try {
-            const { name, price, storeId, productImage, categoryId } = data
+            const { name, originalPrice, offerPrice, storeId, productImage, categoryId } = data
             const RegisterUser = await Entity.Product.findOne({
                 where: {
                     name: name
@@ -23,7 +23,8 @@ class ProductService {
             } else {
                 const payload = {
                     name: name,
-                    price: price,
+                    originalPrice: originalPrice,
+                    offerPrice: offerPrice || originalPrice, // If no offer price is provided, use original price
                     storeId: storeId,
                     isActive: 1,
                     categoryId: categoryId,
@@ -41,7 +42,7 @@ class ProductService {
 
     async UpdateProduct(data, res) {
         try {
-            const { id, name, price, storeId, productImage } = data
+            const { id, name, originalPrice, offerPrice, storeId, productImage } = data
             const findId = await Entity.Product.findOne({
                 where: {
                     id: id
@@ -69,7 +70,8 @@ class ProductService {
                 const payload = {
                     name: name,
                     storeId: storeId,
-                    price: price,
+                    originalPrice: originalPrice,
+                    offerPrice: offerPrice || originalPrice, // If no offer price is provided, use original price
                     isActive: 1,
                     createdDate: new Date(),
                     productImage: imageBuffer,

@@ -4,8 +4,8 @@ import Service from "./Service";
 class StoreHandler {
     async StoreAdd(req, res) {
         try {
-            const data = req.body
-            const { name,price,address,adminId,  email, password } = data
+            const data = req.body;
+            const { name, price, address, adminId, email, password, phoneNumber } = data;
             if (!name) {
                 return res.send({ response_code: 2, response_message: "name is missing", response_code: 1 });
             }
@@ -23,15 +23,17 @@ class StoreHandler {
                 return res.send({ response_code: 2, response_message: "password atleast 3 characters", response_code: 1 });
             } else if (!isValidPasswordMaxLength(password)) {
                 return res.send({ response_code: 2, response_message: "password maximum 20 characters", response_code: 1 });
-            }else if (!adminId) {
+            } else if (!adminId) {
                 return res.send({ response_code: 2, response_message: "admin is missing", response_code: 1 });
-            }else if (!address) {
+            } else if (!address) {
                 return res.send({ response_code: 2, response_message: "address is missing", response_code: 1 });
+            } else if (!phoneNumber) {
+                return res.send({ response_code: 2, response_message: "phone number is missing", response_code: 1 });
             } else {
-                await Service.StoreAdd(data, res)
+                await Service.StoreAdd(data, res);
             }
         } catch (error) {
-            console.error("STORE_ADD",error)
+            console.error("STORE_ADD", error);
             return res.status(500).send({ response_code: 2, response_message: "Sorry something went wrong" });
         }
     }

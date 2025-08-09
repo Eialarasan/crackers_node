@@ -40,5 +40,13 @@ export default [
         method: Handler.getProductList,
         options: {}
     },
+    //customer app
+    {
+        path: '/customer/list',
+        type: MediaType.GET,
+        middleware: [],
+        method: Handler.getProductList,
+        options: {}
+    }
    
 ]

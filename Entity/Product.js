@@ -19,10 +19,15 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.TEXT,
             allowNull: true
         },
-        price: {
-            field: 'price',
+        originalPrice: {
+            field: 'original_price',
             type: DataTypes.DECIMAL(10, 2),
             allowNull: false
+        },
+        offerPrice: {
+            field: 'offer_price',
+            type: DataTypes.DECIMAL(10, 2),
+            allowNull: true
         },
         categoryId: {
             field: 'category_id',

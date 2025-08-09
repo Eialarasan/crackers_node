@@ -4,7 +4,7 @@ class OrderFilter {
     async createOrder(req, res) {
         try {
             const data = req.body;
-            const { customerName, phoneNumber, deliveryAddress, productDetails, totalAmount } = data;
+            const { customerName, phoneNumber, deliveryAddress, productDetails, totalAmount, storeId } = data;
 
             if (!customerName) {
                 return res.send({ response_code: 2, response_message: "Customer name is missing", response_code: 1 });
@@ -16,6 +16,8 @@ class OrderFilter {
                 return res.send({ response_code: 2, response_message: "Product details are missing or invalid", response_code: 1 });
             } else if (!totalAmount) {
                 return res.send({ response_code: 2, response_message: "Total amount is missing", response_code: 1 });
+            } else if (!storeId) {
+                return res.send({ response_code: 2, response_message: "Store ID is missing", response_code: 1 });
             } else {
                 await Service.createOrder(data, res);
             }

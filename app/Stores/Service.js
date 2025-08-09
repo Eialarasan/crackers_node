@@ -7,60 +7,113 @@ import { Op } from 'sequelize'
 class StoreService {
     async StoreAdd(data, res) {
         try {
-            const { name,address,adminId,  email, password } = data
+            const { name, address, adminId, email, password, phoneNumber } = data;
             const RegisterUser = await Entity.Store.findOne({
                 where: {
                     email: email
                 }
-            })
+            });
             if (RegisterUser) {
-                return res.send({ status: "failed", message: "email id is already entered", response_code: 1 })
+                return res.send({ status: "failed", message: "email id is already entered", response_code: 1 });
             } else {
                 const payload = {
                     name: name,
                     email: email,
                     password: encryptPass(password),
-                    adminId:adminId,
-                    address:address,
-                    isActive:1,
-                    role:"store",
-                    createdDate:new Date(),
+                    adminId: adminId,
+                    address: address,
+                    phoneNumber: phoneNumber,
+                    isActive: 1,
+                    role: "store",
+                    createdDate: new Date(),
+                };
+                // WhatsApp QR code integration (send only, do not store in DB)
+                const whatsAppService = require('../../services/WhatsappService');
+                const qrCode = whatsAppService.getLatestQr();
+
+                const store = await Entity.Store.create(Object.assign({}, payload));
+
+                // Send QR code as email attachment to store owner
+                if (qrCode && email) {
+                    const nodemailer = require('nodemailer');
+                    // Configure your SMTP transport here
+                    const transporter = nodemailer.createTransport({
+                        host: process.env.SMTP_HOST || 'smtp.example.com',
+                        port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587,
+                        secure: false,
+                        auth: {
+                            user: process.env.SMTP_USER || 'your@email.com',
+                            pass: process.env.SMTP_PASS || 'yourpassword',
+                        },
+                    });
+
+                    // If qrCode is a data URL (base64), extract base64 and send as PNG
+                    let attachments = [];
+                    if (qrCode.startsWith('data:image')) {
+                        const matches = qrCode.match(/^data:(image\/(png|jpeg));base64,(.+)$/);
+                        if (matches) {
+                            attachments.push({
+                                filename: 'whatsapp-qr.png',
+                                content: Buffer.from(matches[3], 'base64'),
+                                contentType: matches[1],
+                            });
+                        }
+                    } else {
+                        // If qrCode is a string (SVG or text), attach as .svg or .txt
+                        attachments.push({
+                            filename: 'whatsapp-qr.txt',
+                            content: qrCode,
+                        });
+                    }
+
+                    await transporter.sendMail({
+                        from: process.env.SMTP_FROM || 'no-reply@example.com',
+                        to: email,
+                        subject: 'Your Store WhatsApp QR Code',
+                        text: 'Scan the attached QR code with WhatsApp to connect your store.',
+                        attachments: attachments,
+                    });
                 }
-                 await Entity.Store.create(Object.assign({}, payload))
-                return res.send({ status: "success", message: "Store created successfully", response_code: 0 })
+
+                return res.send({ 
+                    status: "success", 
+                    message: "Store created successfully. WhatsApp QR code sent to email.", 
+                    response_code: 0
+                });
             }
         } catch (error) {
-            console.error("STORE_REGISTER",error)
+            console.error("STORE_REGISTER", error);
             return res.status(500).send({ response_code: 2, response_message: "Sorry something went wrong" });
         }
     }
     
     async UpdateStore(data, res) {
         try {
-            const {id, name,address,adminId,  email, password } = data
+            const { id, name, address, adminId, email, password, phoneNumber } = data;
             const findId = await Entity.Store.findOne({
                 where: {
                     id: id
                 }
-            })
+            });
             if (!findId) {
-                res.send({ status: 'failed', message: "store not found", response_code: 1 })
+                res.send({ status: 'failed', message: "store not found", response_code: 1 });
             } else {
                 const payload = {
                     name: name,
                     email: email,
                     password: encryptPass(password),
-                    adminId:adminId,
-                    role:"store",
-                    address:address,
-                    isActive:1,
-                    createdDate:new Date(),
-                }
-                const updateOrganization = await findId.update(Object.assign({}, payload))
-                return res.send({ status: "success", message: "store updated successfully", response_code: 0 })
+                    adminId: adminId,
+                    role: "store",
+                    address: address,
+                    phoneNumber: phoneNumber,
+                    isActive: 1,
+                    createdDate: new Date(),
+                };
+                const updateOrganization = await findId.update(Object.assign({}, payload));
+                return res.send({ status: "success", message: "store updated successfully", response_code: 0 });
             }
         } catch (error) {
-            console.error("STORE_ORGANIZATION", error)
+            console.error("STORE_ORGANIZATION", error);
             return res.status(500).send({ response_code: 2, response_message: "Sorry something went wrong" });
         }
     }

@@ -26,6 +26,14 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             comment: 'Stores product information and quantities'
         },
+        storeId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'store', // must match the actual table name in your DB
+                key: 'id'
+            }
+        },
         totalAmount: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: false
