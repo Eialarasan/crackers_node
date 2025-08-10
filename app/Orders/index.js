@@ -1,20 +1,21 @@
 'use strict';
 
 import { MediaType } from "../../config";
+import { authendicateToken, authenticateCustomerToken } from "../../Security/JwtAuth";
 import Handler from "./Handler";
 
 export default [
     {
         path: '/create',
         type: MediaType.POST,
-        middleware: [],
+        middleware: [authenticateCustomerToken],
         method: Handler.createOrder,
         options: {}
     },
     {
         path: '/list',
         type: MediaType.GET,
-        middleware: [],
+        middleware: [authendicateToken],
         method: Handler.getOrderList,
         options: {}
     },
@@ -28,7 +29,7 @@ export default [
     {
         path: '/status',
         type: MediaType.POST,
-        middleware: [],
+        middleware: [authendicateToken],
         method: Handler.updateOrderStatus,
         options: {}
     },

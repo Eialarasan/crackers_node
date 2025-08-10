@@ -7,6 +7,7 @@ import productRouters from './Products/index'
 import superadminRouters from './Superadmin/index'
 import categoryRouters from './Catogory/index'
 import orderRouters from './Orders/index'
+import customerRouters from './Customer/index'
 let userRouter = express.Router(ProcessRoutes);
 if (userRouters && userRouters.length > 0) {
     userRouter = ProcessRoutes(userRouter, userRouters);
@@ -54,6 +55,14 @@ if (orderRouters && orderRouters.length > 0) {
     console.error('There is no order route configured')
 }
 
+const customerRouter = ProcessRoutes(express.Router(), customerRouters);
 export {
-    adminRouter,userRouter,productRouter,storeRouter,superadminRouter,categoryRouter,orderRouter
-}
+    adminRouter,
+    userRouter,
+    productRouter,
+    storeRouter,
+    superadminRouter,
+    categoryRouter,
+    orderRouter,
+    customerRouter
+};

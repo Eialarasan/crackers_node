@@ -1,6 +1,6 @@
 'use strict';
 
-import { authendicateToken } from "../../Security/JwtAuth";
+import { authendicateToken, authenticateCustomerToken } from "../../Security/JwtAuth";
 import { MediaType } from "../../config";
 import Handler from "./Handler";
 
@@ -44,7 +44,7 @@ export default [
     {
         path: '/customer/list',
         type: MediaType.GET,
-        middleware: [],
+        middleware: [authenticateCustomerToken],
         method: Handler.getProductList,
         options: {}
     }

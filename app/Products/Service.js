@@ -154,31 +154,57 @@ class ProductService {
 
     async GetProductList(data, res) {
         try {
-            const productList = await Entity.Product.findAll({
-                where: (data.search && data.id) ? {
-                    isActive: 1,
-                    id: data.id,
-                    userName: { [Op.like]: `%${data.search}%` }
-                } : data.id ? {
-                    isActive: 1,
-                    id: data.id,
-                } : data.search ? {
-                    isActive: 1,
+            // Build where clause dynamically
+            let where = { isActive: 1 };
+            if (data.id) {
+                where.id = data.id;
+            }
+            if (data.search) {
+                where.name = { [Op.like]: `%${data.search}%` };
+            }
+            if (data.categoryId) {
+                where.categoryId = data.categoryId;
+            }
 
-                    userName: { [Op.like]: `%${data.search}%` }
-                } : {
-                    isActive: 1
-                }, include: [
+            // Pagination
+            let limit = 10; // default limit
+            let offset = 0;
+            if (data.limit && !isNaN(parseInt(data.limit))) {
+                limit = parseInt(data.limit);
+            }
+            if (data.offset && !isNaN(parseInt(data.offset))) {
+                offset = parseInt(data.offset);
+            } else if (data.page && !isNaN(parseInt(data.page))) {
+                // page is 1-based
+                offset = (parseInt(data.page) - 1) * limit;
+            }
+
+            const { count, rows: productList } = await Entity.Product.findAndCountAll({
+                where,
+                include: [
                     {
                         model: Entity.Category
                     },
+                ],
+                limit,
+                offset
+            });
 
-                ]
+            // For load more: return nextOffset and hasMore
+            const nextOffset = offset + productList.length;
+            const hasMore = nextOffset < count;
 
-            })
-            return res.send({ status: 'success', message: 'success', response: productList, response_code: 0 })
+            return res.send({
+                status: 'success',
+                message: 'success',
+                response: productList,
+                total: count,
+                nextOffset,
+                hasMore,
+                response_code: 0
+            });
         } catch (error) {
-            console.error("GET_STORE_LIST", error)
+            console.error("GET_STORE_LIST", error);
             return res.status(500).send({ response_code: 2, response_message: "Sorry something went wrong" });
         }
     }
