@@ -46,6 +46,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('pending', 'paid', 'failed'),
             defaultValue: 'pending'
         },
+        paymentType: {
+            type: DataTypes.ENUM('cash', 'upi'),
+            allowNull: false,
+            defaultValue: 'cash',
+            comment: 'cash = cash on delivery, upi = UPI payment'
+        },
         orderDate: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW

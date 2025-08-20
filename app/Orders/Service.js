@@ -5,7 +5,7 @@ import whatsAppService from '../../services/WhatsappService';
 class OrderService {
     async createOrder(data, res) {
         try {
-            const { customerName, phoneNumber, email, deliveryAddress, productDetails, totalAmount, storeId } = data;
+            const { customerName, phoneNumber, email, deliveryAddress, productDetails, totalAmount, storeId, paymentType } = data;
 
             const payload = {
                 customerName,
@@ -15,6 +15,7 @@ class OrderService {
                 productDetails,
                 totalAmount,
                 storeId,
+                paymentType: paymentType || 'cash',
                 orderStatus: 'pending',
                 paymentStatus: 'pending',
                 orderDate: new Date()
@@ -84,7 +85,7 @@ class OrderService {
 
     async updateOrder(data, res) {
         try {
-            const { id, customerName, phoneNumber, email, deliveryAddress,orderStatus } = data;
+            const { id, customerName, phoneNumber, email, deliveryAddress, orderStatus, paymentType } = data;
             const findOrder = await Entity.Order.findOne({
                 where: {
                     id: id
@@ -105,6 +106,7 @@ class OrderService {
                 email,
                 deliveryAddress,
                 orderStatus: orderStatus || findOrder.orderStatus, // Preserve existing status if not provided
+                paymentType: paymentType || findOrder.paymentType, // Preserve existing paymentType if not provided
                 orderDate: new Date()   
             };
 

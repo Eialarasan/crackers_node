@@ -10,7 +10,7 @@ var db = {
         dialect:'mysql'
      } )
 };
-// db.sequelize.sync({ alter: true }) // This will alter the table to add the new column
+db.sequelize.sync({ alter: true }) // This will alter the table to add the new column
 db.Order = require('./Order')(db.sequelize, Sequelize.DataTypes)
 db.Category = require('./Category')(db.sequelize, Sequelize.DataTypes)
 db.SuperAdmin = require('./SuperAdmin')(db.sequelize, Sequelize.DataTypes)
