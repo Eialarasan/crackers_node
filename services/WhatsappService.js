@@ -36,48 +36,54 @@ class WhatsAppService {
     }
 
     getLatestQr() {
-        return this.latestQr;
+        // return this.latestQr; // Commented out - WhatsApp disabled
+        return null;
     }
 
     async sendOrderNotification(storeOwnerNumber, orderDetails) {
-        try {
-            if (!this.isReady) {
-                throw new Error('WhatsApp client is not ready');
-            }
+        // WhatsApp functionality commented out
+        console.log('WhatsApp notification disabled - would send to:', storeOwnerNumber);
+        console.log('Order details:', orderDetails);
+        return true;
+        
+        // try {
+        //     if (!this.isReady) {
+        //         throw new Error('WhatsApp client is not ready');
+        //     }
 
-            const message = this.formatOrderMessage(orderDetails);
+        //     const message = this.formatOrderMessage(orderDetails);
             
-            // Format the phone number (remove any spaces, dashes, etc.)
-            const formattedNumber = storeOwnerNumber.replace(/[^0-9]/g, '');
-            const chatId = `${formattedNumber}@c.us`;
+        //     // Format the phone number (remove any spaces, dashes, etc.)
+        //     const formattedNumber = storeOwnerNumber.replace(/[^0-9]/g, '');
+        //     const chatId = `${formattedNumber}@c.us`;
 
-            await this.client.sendMessage(chatId, message);
-            return true;
-        } catch (error) {
-            console.error('Error sending WhatsApp message:', error);
-            throw error;
-        }
+        //     await this.client.sendMessage(chatId, message);
+        //     return true;
+        // } catch (error) {
+        //     console.error('Error sending WhatsApp message:', error);
+        //     throw error;
+        // }
     }
 
-    formatOrderMessage(order) {
-        let message = '🛍️ *New Order Received!*\n\n';
-        message += `Order ID: #${order.id}\n`;
-        message += `Customer Name: ${order.customerName}\n`;
-        message += `Phone: ${order.phoneNumber}\n\n`;
-        message += '*Order Details:*\n';
+    // formatOrderMessage(order) {
+    //     let message = '🛍️ *New Order Received!*\n\n';
+    //     message += `Order ID: #${order.id}\n`;
+    //     message += `Customer Name: ${order.customerName}\n`;
+    //     message += `Phone: ${order.phoneNumber}\n\n`;
+    //     message += '*Order Details:*\n';
 
-        // Format product details
-        const products = order.productDetails;
-        products.forEach(product => {
-            message += `▪️ ${product.name} x ${product.quantity} - ₹${product.price * product.quantity}\n`;
-        });
+    //     // Format product details
+    //     const products = order.productDetails;
+    //     products.forEach(product => {
+    //         message += `▪️ ${product.name} x ${product.quantity} - ₹${product.price * product.quantity}\n`;
+    //     });
 
-        message += `\n💰 Total Amount: ₹${order.totalAmount}\n`;
-        message += `📍 Delivery Address: ${order.deliveryAddress}\n\n`;
-        message += 'Please process this order as soon as possible. Thank you!';
+    //     message += `\n💰 Total Amount: ₹${order.totalAmount}\n`;
+    //     message += `📍 Delivery Address: ${order.deliveryAddress}\n\n`;
+    //     message += 'Please process this order as soon as possible. Thank you!';
 
-        return message;
-    }
+    //     return message;
+    // }
 }
 
 // Create a singleton instance

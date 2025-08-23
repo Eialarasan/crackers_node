@@ -27,6 +27,7 @@ class ProductService {
                     offerPrice: offerPrice || originalPrice, // If no offer price is provided, use original price
                     storeId: storeId,
                     isActive: 1,
+                    inStock: true, // New products are in stock by default
                     categoryId: categoryId,
                     createdDate: new Date(),
                     productImage: imageBuffer,
@@ -73,6 +74,7 @@ class ProductService {
                     originalPrice: originalPrice,
                     offerPrice: offerPrice || originalPrice, // If no offer price is provided, use original price
                     isActive: 1,
+                    inStock: data.inStock !== undefined ? data.inStock : findId.inStock, // Preserve existing inStock value if not provided
                     createdDate: new Date(),
                     productImage: imageBuffer,
                 }

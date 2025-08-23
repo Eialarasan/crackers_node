@@ -43,10 +43,17 @@ module.exports = function (sequelize, DataTypes) {
             field: 'is_active',
             type: DataTypes.BOOLEAN,
             defaultValue: true
-        }, productImage: {
+        }, 
+        productImage: {
             field: 'productImage',
             type: DataTypes.BLOB('long'), // 'long' for large images
             allowNull: true
+        },
+        inStock: {
+            field: 'in_stock',
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+            allowNull: false
         },
         createdAt: {
             field: 'created_at',

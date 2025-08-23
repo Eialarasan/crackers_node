@@ -47,10 +47,14 @@ class ProductFilter {
 
     async updateProduct(req, res) {
         try {
-            const data = req.body
-                await Service.UpdateProduct(data, res)
+            const data = req.body;
+            // Validate inStock if provided
+            if (data.inStock !== undefined && typeof data.inStock !== 'boolean') {
+                return res.send({ response_code: 1, response_message: "inStock must be a boolean value" });
+            }
+            await Service.UpdateProduct(data, res);
         } catch (error) {
-            console.error("UPDATE_PRODUCT", error)
+            console.error("UPDATE_PRODUCT", error);
             return res.status(500).send({ response_code: 2, response_message: "Sorry something went wrong" });
         }
     }
