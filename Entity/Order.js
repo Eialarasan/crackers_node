@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'store', // must match the actual table name in your DB
+                model: 'Store', // must match the actual table name in your DB
                 key: 'id'
             }
         },

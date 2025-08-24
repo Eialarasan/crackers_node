@@ -12,6 +12,7 @@ dist/
 
 # Package files
 *.jar
+.wwebjs_auth/
 
 # Maven
 target/
