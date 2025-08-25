@@ -29,51 +29,7 @@ class StoreService {
                 };
                 // WhatsApp QR code integration (send only, do not store in DB)
                 const whatsAppService = require('../../services/WhatsappService');
-                const qrCode = whatsAppService.getLatestQr();
-
-                const store = await Entity.Store.create(Object.assign({}, payload));
-
-                // Send QR code as email attachment to store owner
-                if (qrCode && email) {
-                    const nodemailer = require('nodemailer');
-                    // Configure your SMTP transport here
-                    const transporter = nodemailer.createTransport({
-                        host: process.env.SMTP_HOST || 'smtp.example.com',
-                        port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587,
-                        secure: false,
-                        auth: {
-                            user: process.env.SMTP_USER || 'your@email.com',
-                            pass: process.env.SMTP_PASS || 'yourpassword',
-                        },
-                    });
-
-                    // If qrCode is a data URL (base64), extract base64 and send as PNG
-                    let attachments = [];
-                    if (qrCode.startsWith('data:image')) {
-                        const matches = qrCode.match(/^data:(image\/(png|jpeg));base64,(.+)$/);
-                        if (matches) {
-                            attachments.push({
-                                filename: 'whatsapp-qr.png',
-                                content: Buffer.from(matches[3], 'base64'),
-                                contentType: matches[1],
-                            });
-                        }
-                    } else {
-                        // If qrCode is a string (SVG or text), attach as .svg or .txt
-                        attachments.push({
-                            filename: 'whatsapp-qr.txt',
-                            content: qrCode,
-                        });
-                    }
-
-                    await transporter.sendMail({
-                        from: process.env.SMTP_FROM || 'no-reply@example.com',
-                        to: email,
-                        subject: 'Your Store WhatsApp QR Code',
-                        text: 'Scan the attached QR code with WhatsApp to connect your store.',
-                        attachments: attachments,
-                    });
-                }
+                
 
                 return res.send({ 
                     status: "success", 

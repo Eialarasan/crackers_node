@@ -22,7 +22,7 @@ class WhatsAppService {
         this.client.on('qr', (qr) => {
             this.latestQr = qr;
             console.log('Please scan the following QR code with WhatsApp:');
-            qrcode.generate(qr, { small: true });
+            // qrcode.generate(qr, { small: true });
         });
 
         // Handle ready state
