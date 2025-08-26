@@ -9,30 +9,46 @@ services:
       - "80:3000"
     env_file:
       - .env
+    environment:
+      - NODE_ENV=production
+      - DB_USERNAME=${DB_USERNAME:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-7EhlUK7c1AIG}
+      - DB_NAME=${DB_NAME:-crackers}
+      - DB_HOST=db
+      - DB_PORT=5432
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - app-network
     command: >
-      sh -c "npx wait-on tcp:3306 && npx sequelize db:seed:all && npm start"
+      sh -c "npx wait-on tcp:5432 && npx sequelize db:seed:all && npm start"
 
   db:
-    image: mysql:8
-    container_name: mysql-db
+    image: postgres:latest
+    container_name: postgres-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USERNAME:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-7EhlUK7c1AIG}
+      - POSTGRES_DB=${DB_NAME:-crackers}
+      - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - app-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
 volumes:
-  mysql_data:
+  pg_data:
+    name: crackers-pg-data
+
+networks:
+  app-network:
+    driver: bridge
