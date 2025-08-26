@@ -26,7 +26,7 @@ class ProductService {
                     originalPrice: originalPrice,
                     offerPrice: offerPrice || originalPrice, // If no offer price is provided, use original price
                     storeId: storeId,
-                    isActive: 1,
+                    isActive: true,
                     inStock: true, // New products are in stock by default
                     categoryId: categoryId,
                     createdDate: new Date(),
@@ -73,7 +73,7 @@ class ProductService {
                     storeId: storeId,
                     originalPrice: originalPrice,
                     offerPrice: offerPrice || originalPrice, // If no offer price is provided, use original price
-                    isActive: 1,
+                    isActive: true,
                     inStock: data.inStock !== undefined ? data.inStock : findId.inStock, // Preserve existing inStock value if not provided
                     createdDate: new Date(),
                     productImage: imageBuffer,
@@ -96,7 +96,7 @@ class ProductService {
             const findUser = await Entity.Store.findOne({
                 where: {
                     email: email,
-                    isActive: 1,
+                    isActive: true,
                 }
             })
             if (!findUser || findUser.password != encryptPass(password)) {
@@ -157,7 +157,7 @@ class ProductService {
     async GetProductList(data, res) {
         try {
             // Build where clause dynamically
-            let where = { isActive: 1 };
+            let where = { isActive: true };
             if (data.id) {
                 where.id = data.id;
             }

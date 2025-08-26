@@ -46,7 +46,7 @@ module.exports = function (sequelize, DataTypes) {
         }, 
         productImage: {
             field: 'productImage',
-            type: DataTypes.BLOB('long'), // 'long' for large images
+            type: DataTypes.BLOB, // BYTEA in PostgreSQL
             allowNull: true
         },
         inStock: {

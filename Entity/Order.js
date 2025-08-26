@@ -6,23 +6,23 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true
         },
         customerName: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(255),
             allowNull: false
         },
         phoneNumber: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(20),
             allowNull: false
         },
         email: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(255),
             allowNull: true
         },
         deliveryAddress: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false
         },
         productDetails: {
-            type: DataTypes.JSON,
+            type: DataTypes.JSONB,  // Using JSONB for better PostgreSQL performance
             allowNull: false,
             comment: 'Stores product information and quantities'
         },
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'Store', // must match the actual table name in your DB
+                model: 'Store', // lowercase table name for PostgreSQL
                 key: 'id'
             }
         },
@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         orderDate: {
             type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW
+            defaultValue: sequelize.fn('NOW')  // Using PostgreSQL NOW() function
         }
     }, {
         tableName: 'orders',

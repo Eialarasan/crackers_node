@@ -7,8 +7,10 @@ var db = {
         database: process.env.DATABASE,
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
-        dialect:'mysql'
-     } )
+        port: process.env.DB_PORT || 5432,
+        dialect: 'postgres',
+        logging: false
+    })
 };
 // db.sequelize.sync({ alter: true }) // This will alter the table to add the new column
 db.Order = require('./Order')(db.sequelize, Sequelize.DataTypes)

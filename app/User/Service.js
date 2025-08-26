@@ -22,7 +22,7 @@ class UserService {
                     email: email,
                     password: encryptPass(password),
                     roleId:roleId,
-                    isActive:1,
+                    isActive: true,
                     createdDate:new Date(),
                 }
                  await Entity.User.create(Object.assign({}, payload))
@@ -72,7 +72,7 @@ class UserService {
             const findUser = await Entity.User.findOne({
                 where: {
                     email: email,
-                    isActive:1,
+                    isActive: true,
                 }, include: [
                     {
                         model: Entity.Roles,
@@ -139,18 +139,18 @@ class UserService {
         try {
             const rolesList = await Entity.User.findAll({
                 where: (data.search&&data.id)? {
-                    isActive: 1,
+                    isActive: true,
                    id:data.id,
                    userName:{ [Op.like]: `%${data.search}%`}
                 }:data.id? {
-                    isActive: 1,
+                    isActive: true,
                     id:data.id,
                 }:data.search?{
-                    isActive: 1,
+                    isActive: true,
                     
                     userName:{ [Op.like]: `%${data.search}%`}
                 }:{
-                    isActive:1
+                    isActive: true
                 },
                 include: [
                     {

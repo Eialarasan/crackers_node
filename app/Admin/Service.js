@@ -36,7 +36,7 @@ class AdminService {
 
     async Updateadmin(data, res) {
         try {
-            const { id, name, email, password, superAdminId, isActive,active } = data
+            const { id, name, email, password, superAdminId, isActive } = data
             const findId = await Entity.Admin.findOne({
                 where: {
                     id: id
