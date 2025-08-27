@@ -115,29 +115,48 @@ class CategoryService {
 
     async GetCategoryList(data, res) {
         try {
-            const productList = await Entity.Category.findAll({
-                where: (data.search && data.id) ? {
-                    isActive: 1,
-                    id: data.id,
-                    name: { [Op.like]: `%${data.search}%` }
-                } : data.id ? {
-                    isActive: 1,
-                    id: data.id,
-                } : data.search ? {
-                    isActive: 1,
+            // Build where clause more efficiently
+            let where = { isActive: 1 };
+            
+            if (data.id) {
+                where.id = data.id;
+            }
+            
+            if (data.search) {
+                where.name = { [Op.iLike]: `${data.search}%` }; // Changed to starts-with search for better index usage
+            }
 
-                    name: { [Op.like]: `%${data.search}%` }
-                } : {
-                    isActive: 1
-                }, include: [
+            // Pagination
+            const limit = data.limit ? parseInt(data.limit) : 5;
+            const offset = data.page ? (parseInt(data.page) - 1) * limit : 0;
+
+            const { count, rows: categoryList } = await Entity.Category.findAndCountAll({
+                attributes: ['id', 'name', 'storeId', 'isActive', 'createdAt'], // Select only needed fields
+                where,
+                include: [
                     {
-                        model: Entity.Product
-                    },
+                        model: Entity.Product,
+                        attributes: ['id', 'name'], // Only get essential product fields
+                        required: false, // LEFT JOIN instead of INNER JOIN
+                        limit: 5, // Limit number of products per category
+                        where: { isActive: true }
+                    }
+                ],
+                order: [['createdAt', 'ASC']], // Consistent ordering
+                limit,
+                offset
+            });
 
-                ]
-
+            return res.send({
+                status: 'success',
+                message: 'success',
+                response: categoryList,
+                total: count,
+                currentPage: data.page || 1,
+                totalPages: Math.ceil(count / limit),
+                hasMore: offset + categoryList.length < count,
+                response_code: 0
             })
-            return res.send({ status: 'success', message: 'success', response: productList, response_code: 0 })
         } catch (error) {
             console.error("GET_STORE_LIST", error)
             return res.status(500).send({ response_code: 2, response_message: "Sorry something went wrong" });

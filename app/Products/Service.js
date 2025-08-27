@@ -14,10 +14,10 @@ class ProductService {
                 }
             })
             let imageBuffer = null;
-            if (productImage) {
-                const base64Data = productImage.replace(/^data:image\/\w+;base64,/, '');
-                imageBuffer = Buffer.from(base64Data, 'base64');
-            }
+            // if (productImage) {
+            //     const base64Data = productImage.replace(/^data:image\/\w+;base64,/, '');
+            //     imageBuffer = Buffer.from(base64Data, 'base64');
+            // }
             if (RegisterUser) {
                 return res.send({ status: "failed", message: "product is already entered", response_code: 1 })
             } else {
@@ -162,14 +162,14 @@ class ProductService {
                 where.id = data.id;
             }
             if (data.search) {
-                where.name = { [Op.like]: `%${data.search}%` };
+                where.name = { [Op.iLike]: `${data.search}%` };
             }
             if (data.categoryId) {
                 where.categoryId = data.categoryId;
             }
 
             // Pagination
-            let limit = 10; // default limit
+            let limit = 5; // default limit
             let offset = 0;
             if (data.limit && !isNaN(parseInt(data.limit))) {
                 limit = parseInt(data.limit);
@@ -181,20 +181,31 @@ class ProductService {
                 offset = (parseInt(data.page) - 1) * limit;
             }
 
-            const { count, rows: productList } = await Entity.Product.findAndCountAll({
+            let productList;
+            let count = 0;
+            
+            if (data.page || data.offset || data.needCount) {
+                count = await Entity.Product.count({ where });
+            }
+
+            productList = await Entity.Product.findAll({
+                attributes: ['id', 'name', 'originalPrice', 'offerPrice', 'storeId', 'isActive', 'inStock', 'categoryId', 'productImage', 'createdAt'],
                 where,
                 include: [
                     {
-                        model: Entity.Category
+                        model: Entity.Category,
+                        attributes: ['id', 'name'], // Only select needed fields from Category
+                        required: false // Make it a LEFT JOIN instead of INNER JOIN
                     },
                 ],
                 limit,
-                offset
+                offset,
+                order: [['createdAt', 'ASC']] // Add ordering for consistency
             });
 
             // For load more: return nextOffset and hasMore
             const nextOffset = offset + productList.length;
-            const hasMore = nextOffset < count;
+            const hasMore = count ? nextOffset < count : false;
 
             return res.send({
                 status: 'success',
