@@ -1,4 +1,4 @@
- const Sequelize=require('sequelize')
+const Sequelize = require('sequelize')
 require('dotenv').config()
 
 var db = {
@@ -12,7 +12,7 @@ var db = {
         logging: false
     })
 };
-// db.sequelize.sync({ alter: true }) // This will alter the table to add the new column
+// db.sequelize.sync({ alter: true })
 db.Order = require('./Order')(db.sequelize, Sequelize.DataTypes)
 db.Category = require('./Category')(db.sequelize, Sequelize.DataTypes)
 db.SuperAdmin = require('./SuperAdmin')(db.sequelize, Sequelize.DataTypes)

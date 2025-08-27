@@ -1,6 +1,5 @@
 import Entity from '../../Entity/index';
 import { Op } from 'sequelize';
-import whatsAppService from '../../services/WhatsappService';
 
 class OrderService {
     async createOrder(data, res) {
@@ -29,21 +28,6 @@ class OrderService {
             });
             console.log(store,"store details");
 
-            if (store && store.phoneNumber) {
-                try {
-                    await whatsAppService.sendOrderNotification(store.phoneNumber, {
-                        id: order.id,
-                        customerName: order.customerName,
-                        phoneNumber: order.phoneNumber,
-                        productDetails: order.productDetails,
-                        totalAmount: order.totalAmount,
-                        deliveryAddress: order.deliveryAddress
-                    });
-                } catch (whatsappError) {
-                    console.error('WhatsApp notification failed:', whatsappError);
-                    // Continue with the order creation even if WhatsApp notification fails
-                }
-            }
 
             return res.send({ 
                 status: "success", 

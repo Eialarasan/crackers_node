@@ -5,7 +5,7 @@ module.exports = {
     username: process.env.DB_USERNAME || "postgres",
     password: process.env.DB_PASSWORD || "root",
     database: process.env.DB_NAME || "crackers",
-    host: process.env.DB_HOST || "127.0.0.1",
+    host: process.env.DB_HOST || "db",
     port: process.env.DB_PORT || 5432,
     dialect: "postgres"
   },
@@ -13,7 +13,7 @@ module.exports = {
     username: process.env.DB_USERNAME || "postgres",
     password: process.env.DB_PASSWORD || "root",
     database: process.env.DB_NAME || "crackers",
-    host: process.env.DB_HOST || "127.0.0.1",
+    host: process.env.DB_HOST || "db",
     port: process.env.DB_PORT || 5432,
     dialect: "postgres"
   },
@@ -21,7 +21,7 @@ module.exports = {
     username: process.env.DB_USERNAME || "postgres",
     password: process.env.DB_PASSWORD || "root",
     database: process.env.DB_NAME || "crackers",
-    host: process.env.DB_HOST || "127.0.0.1",
+    host: process.env.DB_HOST || "db",
     port: process.env.DB_PORT || 5432,
     dialect: "postgres"
   }

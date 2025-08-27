@@ -1,6 +1,6 @@
 'use strict';
 
-import { authendicateToken, authenticateCustomerToken } from "../../Security/JwtAuth";
+import { authendicateToken } from "../../Security/JwtAuth";
 import { MediaType } from "../../config";
 import Handler from "./Handler";
 
