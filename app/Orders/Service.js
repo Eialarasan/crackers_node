@@ -1,10 +1,17 @@
 import Entity from '../../Entity/index';
 import { Op } from 'sequelize';
+import EmailService from '../../util/emailService';
+import { getNewOrderEmailTemplate } from '../../util/emailTemplates';
 
 class OrderService {
     async createOrder(data, res) {
         try {
-            const { customerName, phoneNumber, email, deliveryAddress, productDetails, totalAmount, storeId, paymentType } = data;
+            const { customerName, phoneNumber, email, deliveryAddress, productDetails, totalAmount, paymentType } = data;
+
+            const firstStore = await Entity.Store.findOne({
+                order: [['id', 'ASC']]
+            });
+
 
             const payload = {
                 customerName,
@@ -13,21 +20,42 @@ class OrderService {
                 deliveryAddress,
                 productDetails,
                 totalAmount,
-                storeId,
+                storeId: firstStore.id,
                 paymentType: paymentType || 'cash',
                 orderStatus: 'pending',
                 paymentStatus: 'pending',
                 orderDate: new Date()
             };
 
-            const order = await Entity.Order.create(payload);
+            const newOrder = await Entity.Order.create(payload);
 
-            // Get store details for WhatsApp notification
             const store = await Entity.Store.findOne({
-                where: { id: storeId }
+                where: { id: firstStore.id }
             });
-            console.log(store,"store details");
 
+            if (store && store.email) {
+                const emailTemplate = getNewOrderEmailTemplate(
+                    {
+                        id: newOrder.id,
+                        orderDate: newOrder.orderDate,
+                        totalAmount: totalAmount,
+                        paymentType: paymentType || 'cash',
+                        productDetails: productDetails
+                    },
+                    {
+                        customerName,
+                        phoneNumber,
+                        email,
+                        deliveryAddress
+                    }
+                );
+
+                await EmailService.sendEmail(
+                    store.email,
+                    `New Crackers Order Received - Order #${newOrder.id}`,
+                    emailTemplate
+                );
+            }
 
             return res.send({ 
                 status: "success", 
